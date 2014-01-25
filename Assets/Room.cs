@@ -27,6 +27,6 @@ public class Room : GameBehaviour {
 		if (solid && !top && !right && !bottom && !left && !right) {
 			return solid && !top && !right && !bottom && !left && !right;
 		}
-		return (top && exitTop) || (right && exitRight) || (bottom && exitDown) || (left && exitLeft);
+		return (top == exitTop) && (right == exitRight) && (bottom == exitDown) && (left == exitLeft);
 	}
 }
