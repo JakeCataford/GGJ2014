@@ -20,12 +20,6 @@ public class HopperEnemy : Enemy {
 		}
 	}
 
-	void OnCollisionEnter2D(Collision2D col) {
-		if (col.collider.tag == "Player") {
-			onTouchPlayer(col.collider.gameObject);
-		}
-	}
-
 	void OnCollisionStay2D(Collision2D col) {
 		Vector2 collisionAverageNormal = col.contacts.AverageNormal ();
 		debugLastNormal = collisionAverageNormal;
