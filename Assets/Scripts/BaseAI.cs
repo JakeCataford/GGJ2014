@@ -17,7 +17,7 @@ public class BaseAI : GameBehaviour {
 	protected virtual void OnTouchPlayer(GameObject player) {}
 	
 	public State currentState = State.IDLE;
-	public float visionRange = 2f;
+	public float visionRange = 5f;
 	public GameObject targetPlayer;
 	public bool DebugAgent = false;
 	
