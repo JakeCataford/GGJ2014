@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using CollisionExtentions;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
@@ -31,6 +32,8 @@ public class PlayerMovement : MonoBehaviour {
 	private bool wallHanging = false;
 	private Vector3 wallHangingPosition;
 
+	private Vector2 debugLastNormal = new Vector2 (0, 1);
+
 	private Animator animator;
 
 
@@ -41,9 +44,9 @@ public class PlayerMovement : MonoBehaviour {
 
 	void Update()
 	{
-		grounded = Physics2D.Raycast(transform.position, -Vector2.up, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
-		leftCollision = Physics2D.Raycast(transform.position, -Vector2.right, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
-		rightCollision = Physics2D.Raycast(transform.position, Vector2.right, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
+		//grounded = Physics2D.Raycast(transform.position, -Vector2.up, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
+		//leftCollision = Physics2D.Raycast(transform.position, -Vector2.right, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
+		//rightCollision = Physics2D.Raycast(transform.position, Vector2.right, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
 
 		if (grounded || wallHanging) {
 			powerBoosterUsed = false;
@@ -62,6 +65,23 @@ public class PlayerMovement : MonoBehaviour {
 			boost = true;
 		}
 	}
+
+	void OnCollisionStay2D(Collision2D col) {
+		Vector2 collisionAverageNormal = col.contacts.AverageNormal ();
+		debugLastNormal = collisionAverageNormal;
+		if (Vector2.Dot (collisionAverageNormal, Vector2.up) > 0.9f) {
+			grounded = true;
+		}
+
+		if (Vector2.Dot (collisionAverageNormal, - Vector2.right) > 0.9f) {
+			leftCollision = true;
+		}
+
+		if (Vector2.Dot (collisionAverageNormal, Vector2.right) > 0.9f) {
+			rightCollision = true;
+		}
+	}
+
 	
 	
 	void FixedUpdate ()
@@ -104,6 +124,10 @@ public class PlayerMovement : MonoBehaviour {
 
 		animator.SetFloat("Horizontal Speed", Mathf.Abs(rigidbody2D.velocity.x));
 		animator.SetBool ("Grounded", grounded);
+
+		grounded = false;
+		leftCollision = false;
+		rightCollision = false;
 	}
 	
 	
@@ -148,5 +172,9 @@ public class PlayerMovement : MonoBehaviour {
 		rigidbody2D.velocity = new Vector2(boostX, boostY).normalized * boostSpeed;
 		boost = false;
 		powerBoosterUsed = true;
+	}
+
+	void OnDrawGizmos() {
+		Gizmos.DrawRay (transform.position, debugLastNormal);
 	}
 }

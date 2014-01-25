@@ -24,6 +24,9 @@ public class Room : GameBehaviour {
 	}
 
 	public bool IsValidForConfig(bool top, bool right, bool bottom, bool left) {
-		return (top == exitTop) && (right == exitRight) && (bottom == exitDown) && (left == exitLeft);
+		if (solid && !top && !right && !bottom && !left && !right) {
+			return solid && !top && !right && !bottom && !left && !right;
+		}
+		return (top && exitTop) || (right && exitRight) || (bottom && exitDown) || (left && exitLeft);
 	}
 }
