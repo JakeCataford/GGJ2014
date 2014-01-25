@@ -2,7 +2,8 @@
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-
+[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(WeaponController))]
 public class PlayerMovement : MonoBehaviour {
 
 	[HideInInspector]
@@ -23,16 +24,19 @@ public class PlayerMovement : MonoBehaviour {
 	public bool hasPowerBooster = false;
 	public bool hasPowerWallHang = false;
 
-	private bool grounded = false;
-	private bool leftCollision = false;
+	public bool grounded = false;
+	public bool leftCollision = false;
 	private bool rightCollision = false;
 	private bool powerBoosterUsed = false;
 	private bool wallHanging = false;
 	private Vector3 wallHangingPosition;
 
+	private Animator animator;
+
 
 	void Start() {
 		rigidbody2D.fixedAngle = true;
+		animator = GetComponent<Animator>();
 	}
 
 	void Update()
@@ -52,6 +56,7 @@ public class PlayerMovement : MonoBehaviour {
 		}
 
 		if(Input.GetButtonDown("Jump") && (grounded || wallHanging)) {
+			Debug.Log("Hop.");
 			jump = true;
 		} else if (Input.GetButton("Fire2") && hasPowerBooster && powerBoosterUsed == false) {
 			boost = true;
@@ -96,6 +101,9 @@ public class PlayerMovement : MonoBehaviour {
 		if (boost) {
 			Boost (h, v);
 		}
+
+		animator.SetFloat("Horizontal Speed", Mathf.Abs(rigidbody2D.velocity.x));
+		animator.SetBool ("Grounded", grounded);
 	}
 	
 	

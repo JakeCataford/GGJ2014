@@ -8,11 +8,12 @@ public class Projectile : GameBehaviour {
 	public Vector2 direction = Vector2.right;
 	public int damage = 5;
 	public bool friendly = true;
+	public float speed = 10f;
 
 	void Start () {
 		rigidbody2D.gravityScale = 0.0f;
 		rigidbody2D.drag = 0.0f;
-		rigidbody2D.velocity = direction;
+		rigidbody2D.velocity = direction * speed;
 	}
 	
 	void OnCollisionEnter2D(Collision2D col) {
