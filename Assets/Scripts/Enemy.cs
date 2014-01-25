@@ -10,11 +10,11 @@ public class Enemy : GameBehaviour {
 
 	protected bool isVisible;
 
-	void onBecomeVisible() {
+	void OnBecameVisible() {
 		isVisible = true;
 	}
 
-	void onBecomeInvisible() {
+	void OnBecameInvisible() {
 		isVisible = false;
 	}
 }
