@@ -4,9 +4,9 @@ using System.Collections;
 public class Enemy : GameBehaviour {
 
 	protected BaseAI enemyAI;
-	public int health;
-	public int attackDamage;
-	public float movementSpeed;
+	public int health = 20;
+	public int attackDamage = 5;
+	public float movementSpeed = 10f;
 
 	protected bool isVisible;
 

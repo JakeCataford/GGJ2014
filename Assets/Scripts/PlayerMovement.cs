@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour {
 	private bool powerBoosterUsed = false;
 	private bool wallHanging = false;
 	private Vector3 wallHangingPosition;
+	private bool enemyCollision = false;
 
 	private Vector2 debugLastNormal = new Vector2 (0, 1);
 
@@ -65,11 +66,19 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
+	void OnCollisionEnter2D(Collision2D col) {
+		if (col.collider.tag == "Enemy") {
+			rigidbody2D.velocity = new Vector2(Mathf.Sign(transform.position.x - col.transform.position.x), 1).normalized * boostSpeed;
+			enemyCollision = true;
+		}
+	}
+
 	void OnCollisionStay2D(Collision2D col) {
 		Vector2 collisionAverageNormal = col.contacts.AverageNormal ();
 		debugLastNormal = collisionAverageNormal;
 		if (Vector2.Dot (collisionAverageNormal, Vector2.up) > 0.9f) {
 			grounded = true;
+			enemyCollision = false;
 		}
 
 		if (Vector2.Dot (collisionAverageNormal, Vector2.right) > 0.9f) {
@@ -90,7 +99,7 @@ public class PlayerMovement : MonoBehaviour {
 		if (wallHanging) {
 			rigidbody2D.transform.position = wallHangingPosition;
 		} else {
-			if (powerBoosterUsed) {
+			if (powerBoosterUsed || enemyCollision) {
 				rigidbody2D.velocity = new Vector2(Mathf.Lerp(rigidbody2D.velocity.x, 0f, boostDecelerationLerpTime), rigidbody2D.velocity.y);
 			} else {
 				if (h == 0) {
@@ -165,7 +174,6 @@ public class PlayerMovement : MonoBehaviour {
 			}
 		}
 		
-//		rigidbody2D.AddForce(new Vector2(boostX, boostY).normalized * boostSpeed);
 		rigidbody2D.velocity = new Vector2(boostX, boostY).normalized * boostSpeed;
 		boost = false;
 		powerBoosterUsed = true;

@@ -13,16 +13,27 @@ public class HopperEnemy : Enemy {
 		if (!enemyAI) {
 			enemyAI = gameObject.AddComponent<BaseAI>();
 		}
-		health = 10;
-		attackDamage = 10;
-		movementSpeed = 10f;
 	}
 	
 	void Update () {
-		if (isVisible && enemyAI.currentState == BaseAI.State.ENGAGED) {
-			attackPlayer();
+		if (health > 0) {
+			if (isVisible && enemyAI.currentState == BaseAI.State.ENGAGED) {
+				attackPlayer();
+			}
+			grounded = false;
+		} else {
+			Destroy(gameObject);
 		}
-		grounded = false;
+
+	}
+
+	void OnCollisionEnter2D(Collision2D col) {
+		if (col.collider.tag == "Player" || col.collider.tag == "Projectile") {
+			rigidbody2D.velocity = new Vector2(Mathf.Sign(transform.position.x - col.transform.position.x), 1).normalized * 5;
+			if (col.collider.tag == "Player") {
+				col.collider.gameObject.GetComponent<Player>().health -= attackDamage;
+			}
+		}
 	}
 
 	void OnCollisionStay2D(Collision2D col) {

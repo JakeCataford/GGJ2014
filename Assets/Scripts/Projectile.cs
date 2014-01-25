@@ -18,7 +18,9 @@ public class Projectile : GameBehaviour {
 	
 	void OnCollisionEnter2D(Collision2D col) {
 		if (!friendly || col.collider.tag != "Player") {
-			//Deal damage?
+			if (col.collider.tag == "Enemy") {
+				col.collider.gameObject.GetComponent<Enemy>().health -= damage;
+			}
 			Destroy (gameObject);
 		}
 	}
