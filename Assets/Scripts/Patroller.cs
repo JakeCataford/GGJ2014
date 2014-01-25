@@ -17,7 +17,7 @@ public class Patroller : Enemy {
 	void FixedUpdate() {
 		if (isVisible) {
 			Vector2 vel = rigidbody2D.velocity;
-			vel.x = (Vector2.right * transform.localScale.x) * patrolSpeed;
+			vel.x = transform.localScale.x * patrolSpeed;
 			rigidbody2D.velocity = vel;
 			RaycastHit2D hit = Physics2D.Raycast((Vector2) transform.position + (Vector2.right * 1.2f * transform.localScale.x), Vector2.up, 1.0f);
 			if(collidedWithWall || hit) {
