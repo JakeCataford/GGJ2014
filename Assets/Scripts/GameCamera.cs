@@ -8,8 +8,6 @@ public class GameCamera : MonoBehaviour {
 
 	//Tweakables
 	public float movementLagFactor = 0.1f;
-	public float maximumZoom = 1.1f;
-	public float zoomSpeedThreshold = 0.1f;
 
 	public void Start() {
 		if(target == null) {
@@ -25,8 +23,5 @@ public class GameCamera : MonoBehaviour {
 		//Quadratic interpolation of camera position.
 		transform.position = Vector3.Lerp(transform.position, target.position, movementLagFactor);
 		transform.position = new Vector3 (transform.position.x, transform.position.y, -10);
-	}
-
-	public void OnDrawGizmos() {
 	}
 }
