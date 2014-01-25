@@ -5,7 +5,6 @@ public class ParalaxingObject : MonoBehaviour {
 	
 	public float factor = 0.9f;
 	private Vector3 startingPosition;
-	private Vector3 cameraStartingPosition;
 	
 	void Start() {
 		startingPosition = this.transform.position;
