@@ -6,78 +6,134 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour {
 
 	[HideInInspector]
-	public bool facingRight = true;			// For determining which way the player is currently facing.
+	public bool facingRight = true;
 	[HideInInspector]
-	public bool jump = false;				// Condition for whether the player should jump.
-	
-	public float moveDecelerationLerpTime = 1f;	// Amount of force added to move the player left and right.
-	public float speed = 2f;				// The fastest the player can travel in the x axis.
-	public float jumpForce = 250f;			// Amount of force added when the player jumps.
-	
-	private bool grounded = false;			// Whether or not the player is grounded.
+	public bool jump = false;
+	[HideInInspector]
+	public bool boost = false;
+	[HideInInspector]
+	public bool hang = false;
+
+	public float boostDecelerationLerpTime = 0.02f;
+	public float moveDecelerationLerpTime = 1f;	
+	public float playerSpeed = 2f;
+	public float jumpSpeed = 5f;
+	public float boostSpeed = 10f;
+
+	public bool hasPowerBooster = false;
+	public bool hasPowerWallHang = false;
+
+	private bool grounded = false;
 	private bool leftCollision = false;
 	private bool rightCollision = false;
-	
+	private bool powerBoosterUsed = false;
+	private bool wallHanging = false;
+	private Vector3 wallHangingPosition;
+
 	void Update()
 	{
-		// The player is grounded if a raycast from the transform position collides with anything
 		grounded = Physics2D.Raycast(transform.position, -Vector2.up, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
 		leftCollision = Physics2D.Raycast(transform.position, -Vector2.right, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
 		rightCollision = Physics2D.Raycast(transform.position, Vector2.right, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
 
-		// If the jump button is pressed and the player is grounded then the player should jump.
-		if(Input.GetButtonDown("Jump") && grounded)
+		if (grounded || wallHanging) {
+			powerBoosterUsed = false;
+		}
+
+		if ((leftCollision || rightCollision) && hasPowerWallHang && grounded == false && wallHanging == false) {
+			wallHangingPosition = rigidbody2D.transform.position;
+			rigidbody2D.gravityScale = 0;
+			wallHanging = true;
+		}
+
+		if(Input.GetButtonDown("Jump") && (grounded || wallHanging)) {
 			jump = true;
+		} else if (Input.GetButton("Fire2") && hasPowerBooster && powerBoosterUsed == false) {
+			boost = true;
+		}
 	}
 	
 	
 	void FixedUpdate ()
 	{
-		// Cache the horizontal input.
 		float h = Input.GetAxis("Horizontal");
-		
-		// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
+		float v = Input.GetAxis ("Vertical");
 
-		if (h == 0) {
-			rigidbody2D.velocity = new Vector2(Mathf.Lerp(rigidbody2D.velocity.x, 0f, moveDecelerationLerpTime), rigidbody2D.velocity.y);
+//		Horizontal movement
+		if (wallHanging) {
+			rigidbody2D.transform.position = wallHangingPosition;
 		} else {
-			if ((h > 0 && !rightCollision) || (h < 0 && !leftCollision)) {
-				rigidbody2D.velocity = new Vector2(Mathf.Sign(h) * speed, rigidbody2D.velocity.y);
+			if (powerBoosterUsed) {
+				rigidbody2D.velocity = new Vector2(Mathf.Lerp(rigidbody2D.velocity.x, 0f, boostDecelerationLerpTime), rigidbody2D.velocity.y);
 			} else {
-				rigidbody2D.velocity = new Vector2(0f, rigidbody2D.velocity.y);
+				if (h == 0) {
+					rigidbody2D.velocity = new Vector2(Mathf.Lerp(rigidbody2D.velocity.x, 0f, moveDecelerationLerpTime), rigidbody2D.velocity.y);
+				} else {
+					if ((h > 0 && !rightCollision) || (h < 0 && !leftCollision)) {
+						rigidbody2D.velocity = new Vector2(Mathf.Sign(h) * playerSpeed, rigidbody2D.velocity.y);
+					} else {
+						rigidbody2D.velocity = new Vector2(0f, rigidbody2D.velocity.y);
+					}
+				}
 			}
 		}
-		
-		// If the input is moving the player right and the player is facing left...
-		if(h > 0 && !facingRight)
-			// ... flip the player.
+
+		if (h > 0 && !facingRight) {
 			Flip();
-		// Otherwise if the input is moving the player left and the player is facing right...
-		else if(h < 0 && facingRight)
-			// ... flip the player.
+		} else if (h < 0 && facingRight) {
 			Flip();
+		}
 		
-		// If the player should jump...
-		if(jump)
-		{
-			// Add a vertical force to the player.
-			rigidbody2D.AddForce(new Vector2(0f, jumpForce));
-			
-			// Make sure the player can't jump again until the jump conditions from Update are satisfied.
-			jump = false;
+		if (jump) {
+			Jump ();
+		}
+
+		if (boost) {
+			Boost (h, v);
 		}
 	}
 	
 	
 	void Flip ()
 	{
-		// Switch the way the player is labelled as facing.
 		facingRight = !facingRight;
-		
-		// Multiply the player's x local scale by -1.
 		Vector3 theScale = transform.localScale;
 		theScale.x *= -1;
 		transform.localScale = theScale;
 	}
 
+	void Jump ()
+	{
+		if (wallHanging) {
+			float x = leftCollision ? 1 : -1;
+			rigidbody2D.velocity = new Vector2(x, 1).normalized * jumpSpeed;
+			rigidbody2D.gravityScale = 1;
+			wallHanging = false;
+		} else {
+			rigidbody2D.velocity = new Vector2(0f, jumpSpeed);
+		}
+			
+		jump = false;
+	}
+
+	void Boost (float xInput, float yInput)
+	{
+		float boostX = 0, boostY = 0;
+
+		if (yInput == 0 && xInput == 0) {
+			boostY = 1;
+		} else {
+			if (xInput != 0) {
+				boostX = xInput > 0 ? 1 : -1;
+			}
+			if (yInput != 0) {
+				boostY = yInput > 0 ? 1 : -1;
+			}
+		}
+		
+//		rigidbody2D.AddForce(new Vector2(boostX, boostY).normalized * boostSpeed);
+		rigidbody2D.velocity = new Vector2(boostX, boostY).normalized * boostSpeed;
+		boost = false;
+		powerBoosterUsed = true;
+	}
 }
