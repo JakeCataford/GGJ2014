@@ -17,9 +17,8 @@ public class PlayerMovement : MonoBehaviour {
 	public float boostDecelerationLerpTime = 0.02f;
 	public float moveDecelerationLerpTime = 1f;	
 	public float playerSpeed = 2f;
-	public float jumpForce = 250f;
-	public float boostForce = 500f;
-	public float wallJumpSpeed = 2f;
+	public float jumpSpeed = 5f;
+	public float boostSpeed = 10f;
 
 	public bool hasPowerBooster = false;
 	public bool hasPowerWallHang = false;
@@ -107,11 +106,11 @@ public class PlayerMovement : MonoBehaviour {
 	{
 		if (wallHanging) {
 			float x = leftCollision ? 1 : -1;
-			rigidbody2D.velocity = new Vector2(x, 1).normalized * wallJumpSpeed;
+			rigidbody2D.velocity = new Vector2(x, 1).normalized * jumpSpeed;
 			rigidbody2D.gravityScale = 1;
 			wallHanging = false;
 		} else {
-			rigidbody2D.AddForce(new Vector2(0f, jumpForce));
+			rigidbody2D.velocity = new Vector2(0f, jumpSpeed);
 		}
 			
 		jump = false;
@@ -132,7 +131,8 @@ public class PlayerMovement : MonoBehaviour {
 			}
 		}
 		
-		rigidbody2D.AddForce(new Vector2(boostX, boostY).normalized * boostForce);
+//		rigidbody2D.AddForce(new Vector2(boostX, boostY).normalized * boostSpeed);
+		rigidbody2D.velocity = new Vector2(boostX, boostY).normalized * boostSpeed;
 		boost = false;
 		powerBoosterUsed = true;
 	}
