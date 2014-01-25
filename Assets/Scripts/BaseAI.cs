@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class BaseAI : MonoBehaviour {
-	public enum State { IDLE, ENGAGING, DEAD };
+public class BaseAI : GameBehaviour {
+	public enum State { IDLE, ENGAGED, DEAD };
 	
 	//Interface Methods
 	protected virtual void OnSpawn() {}
@@ -20,42 +20,33 @@ public class BaseAI : MonoBehaviour {
 	public float visionRange = 2f;
 	public GameObject targetPlayer;
 	public bool DebugAgent = false;
-	public float selfCollisionBuffer = 1.1f;
 	
 	void Start() {
-		OnSpawn ();
+		OnSpawn();
 	}
 	
 	void Update() {
-		Debug.Log(currentState);
-		List<GameObject> playersInSight = PlayersInSight ();
-		if (currentState == State.IDLE && playersInSight.Count > 0) {
-			OnSight ();
-			currentState = State.ENGAGING;
-			targetPlayer = playersInSight [Mathf.FloorToInt (Random.value * playersInSight.Count)];
-		} else if (currentState == State.IDLE) {
-			Idle ();
-		}
-		
-		if(currentState == State.ENGAGING) {
-			//check if we can still see the player...
-			RaycastHit2D hit = Physics2D.Raycast(this.transform.position + ((targetPlayer.transform.position - transform.position).normalized * selfCollisionBuffer), targetPlayer.transform.position - transform.position);
-			if(hit && hit.collider.tag == "Player") {
-				InSight();
-			} else {
+		List<GameObject> playersInSight = PlayersInSight();
+		if (playersInSight.Count > 0) {
+			targetPlayer = playersInSight[Mathf.FloorToInt(Random.value * playersInSight.Count)];
+
+			if (currentState == State.IDLE) {
+					currentState = State.ENGAGED;
+					OnSight();
+			} else if (currentState == State.ENGAGED) {
+					InSight();
+			}
+		} else {
+			if (currentState == State.ENGAGED) {
+				currentState = State.IDLE;
 				OnLoseSight();
-				//Otherwise try to assign a new target...
-				if(playersInSight.Count > 0) {
-					targetPlayer = playersInSight[Mathf.FloorToInt(Random.value * playersInSight.Count)];
-				} else {
-					//or give up and idle...
-					currentState = State.IDLE;
-					OnStartIdle();
-				}
+				OnStartIdle();
+			} else {
+				Idle();
 			}
 		}
 		
-		Always ();
+		Always();
 	}
 	
 	void OnDrawGizmos() {
@@ -64,7 +55,7 @@ public class BaseAI : MonoBehaviour {
 				Gizmos.color = Color.green;
 			}
 			
-			if (currentState == State.ENGAGING) {
+			if (currentState == State.ENGAGED) {
 				Gizmos.color = Color.red;
 			}
 			
@@ -72,12 +63,12 @@ public class BaseAI : MonoBehaviour {
 				Gizmos.color = Color.gray;
 			}
 			
-			Gizmos.DrawWireCube (transform.position, Vector3.one);
-			Gizmos.DrawWireSphere (transform.position, visionRange);
-			if (currentState == State.ENGAGING) {
-				RaycastHit2D hit = Physics2D.Raycast (this.transform.position, targetPlayer.transform.position - transform.position);
+			Gizmos.DrawWireCube(transform.position, Vector3.one);
+			Gizmos.DrawWireSphere(transform.position, visionRange);
+			if (currentState == State.ENGAGED) {
+				RaycastHit2D hit = Physics2D.Raycast(this.transform.position, targetPlayer.transform.position - transform.position);
 				if (hit) {
-					Gizmos.DrawLine (this.transform.position, hit.point);
+					Gizmos.DrawLine(this.transform.position, hit.point);
 				}
 			}
 		}
@@ -90,14 +81,14 @@ public class BaseAI : MonoBehaviour {
 	}
 	
 	private List<GameObject> PlayersInSight() {
-		Collider2D[] colliders = Physics2D.OverlapCircleAll (transform.position, visionRange);
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, visionRange);
 		List<GameObject> playersInSight = new List<GameObject> ();
 		foreach (Collider2D collider in colliders) {
-			if(collider.tag == "Player") {
+			RaycastHit2D hit = Physics2D.Linecast(transform.position, collider.transform.position, ~1 << LayerMask.NameToLayer("Default"));
+			if(hit && hit.collider.tag == "Player") {
 				playersInSight.Add(collider.gameObject);
 			}
 		}
 		return playersInSight;
 	}
-
 }
