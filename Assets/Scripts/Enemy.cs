@@ -7,4 +7,14 @@ public class Enemy : GameBehaviour {
 	public int health;
 	public int attackDamage;
 	public float movementSpeed;
+
+	protected bool isVisible;
+
+	void onBecomeVisible() {
+		isVisible = true;
+	}
+
+	void onBecomeInvisible() {
+		isVisible = false;
+	}
 }
