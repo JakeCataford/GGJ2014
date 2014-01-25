@@ -19,14 +19,17 @@ public class PlayerMovement : MonoBehaviour {
 	public float playerSpeed = 2f;
 	public float jumpForce = 250f;
 	public float boostForce = 500f;
+	public float wallJumpSpeed = 2f;
 
 	public bool hasPowerBooster = false;
-	public bool hasPowerWallClimb = false;
+	public bool hasPowerWallHang = false;
 
 	private bool grounded = false;
 	private bool leftCollision = false;
 	private bool rightCollision = false;
 	private bool powerBoosterUsed = false;
+	private bool wallHanging = false;
+	private Vector3 wallHangingPosition;
 
 	void Update()
 	{
@@ -34,14 +37,20 @@ public class PlayerMovement : MonoBehaviour {
 		leftCollision = Physics2D.Raycast(transform.position, -Vector2.right, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
 		rightCollision = Physics2D.Raycast(transform.position, Vector2.right, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
 
-		if (grounded) {
+		if (grounded || wallHanging) {
 			powerBoosterUsed = false;
 		}
 
-		if(Input.GetButtonDown("Jump") && grounded) {
+		if ((leftCollision || rightCollision) && hasPowerWallHang && grounded == false && wallHanging == false) {
+			wallHangingPosition = rigidbody2D.transform.position;
+			rigidbody2D.gravityScale = 0;
+			wallHanging = true;
+		}
+
+		if(Input.GetButtonDown("Jump") && (grounded || wallHanging)) {
 			jump = true;
 		} else if (Input.GetButton("Fire2") && hasPowerBooster && powerBoosterUsed == false) {
-				boost = true;
+			boost = true;
 		}
 	}
 	
@@ -52,16 +61,20 @@ public class PlayerMovement : MonoBehaviour {
 		float v = Input.GetAxis ("Vertical");
 
 //		Horizontal movement
-		if (powerBoosterUsed) {
-			rigidbody2D.velocity = new Vector2(Mathf.Lerp(rigidbody2D.velocity.x, 0f, boostDecelerationLerpTime), rigidbody2D.velocity.y);
+		if (wallHanging) {
+			rigidbody2D.transform.position = wallHangingPosition;
 		} else {
-			if (h == 0) {
-				rigidbody2D.velocity = new Vector2(Mathf.Lerp(rigidbody2D.velocity.x, 0f, moveDecelerationLerpTime), rigidbody2D.velocity.y);
+			if (powerBoosterUsed) {
+				rigidbody2D.velocity = new Vector2(Mathf.Lerp(rigidbody2D.velocity.x, 0f, boostDecelerationLerpTime), rigidbody2D.velocity.y);
 			} else {
-				if ((h > 0 && !rightCollision) || (h < 0 && !leftCollision)) {
-					rigidbody2D.velocity = new Vector2(Mathf.Sign(h) * playerSpeed, rigidbody2D.velocity.y);
+				if (h == 0) {
+					rigidbody2D.velocity = new Vector2(Mathf.Lerp(rigidbody2D.velocity.x, 0f, moveDecelerationLerpTime), rigidbody2D.velocity.y);
 				} else {
-					rigidbody2D.velocity = new Vector2(0f, rigidbody2D.velocity.y);
+					if ((h > 0 && !rightCollision) || (h < 0 && !leftCollision)) {
+						rigidbody2D.velocity = new Vector2(Mathf.Sign(h) * playerSpeed, rigidbody2D.velocity.y);
+					} else {
+						rigidbody2D.velocity = new Vector2(0f, rigidbody2D.velocity.y);
+					}
 				}
 			}
 		}
@@ -92,7 +105,15 @@ public class PlayerMovement : MonoBehaviour {
 
 	void Jump ()
 	{
-		rigidbody2D.AddForce(new Vector2(0f, jumpForce));			
+		if (wallHanging) {
+			float x = leftCollision ? 1 : -1;
+			rigidbody2D.velocity = new Vector2(x, 1).normalized * wallJumpSpeed;
+			rigidbody2D.gravityScale = 1;
+			wallHanging = false;
+		} else {
+			rigidbody2D.AddForce(new Vector2(0f, jumpForce));
+		}
+			
 		jump = false;
 	}
 
