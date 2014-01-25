@@ -8,7 +8,6 @@ public class ParalaxingObject : MonoBehaviour {
 	
 	void Start() {
 		startingPosition = this.transform.position;
-		cameraStartingPosition = Camera.main.transform.position;
 	}
 	
 	// Update is called once per frame
