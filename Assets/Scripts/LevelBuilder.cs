@@ -39,6 +39,7 @@ public class LevelBuilder : Singleton<LevelBuilder> {
 
 		GenerateSolutionPath();
 		GenerateRooms();
+		Game.SpawnAllEnemies ();
 		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
 		foreach (GameObject player in players) {
 			player.transform.position = spawnPoint;
@@ -46,6 +47,11 @@ public class LevelBuilder : Singleton<LevelBuilder> {
 	}
 
 	private void GenerateRooms() {
+		Room[][] rooms = new Room[SPUT_MAGNETTE][];
+		for (int i = 0; i < SPUT_MAGNETTE; i++) {
+			rooms[i] = new Room[SPUT_MAGNETTE];
+		}
+
 		for (int i = 0; i < SPUT_MAGNETTE; i ++) {
 			for (int j = 0; j < SPUT_MAGNETTE; j++) {
 				List<Room> ValidRooms;
@@ -60,13 +66,17 @@ public class LevelBuilder : Singleton<LevelBuilder> {
 				}
 
 				if(ValidRooms.Count == 0) {
+					//Skip
 				} else {
 					GameObject go = (GameObject) Instantiate(ValidRooms[Mathf.FloorToInt(UnityEngine.Random.value * ValidRooms.Count)].gameObject);
 					go.transform.position = new Vector3(i * Room.ROOM_SIZE.x, j * Room.ROOM_SIZE.y, 0);
 					go.transform.parent = transform;
+					rooms[i][j] = go.GetComponent<Room>();
 				}
 			}
 		}
+
+		Game.rooms = rooms;
 	}
 
 	private void GenerateSolutionPath() {

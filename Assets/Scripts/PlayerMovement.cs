@@ -59,7 +59,6 @@ public class PlayerMovement : MonoBehaviour {
 		}
 
 		if(Input.GetButtonDown("Jump") && (grounded || wallHanging)) {
-			Debug.Log("Hop.");
 			jump = true;
 		} else if (Input.GetButton("Fire2") && hasPowerBooster && powerBoosterUsed == false && wallHanging == false) {
 			boost = true;

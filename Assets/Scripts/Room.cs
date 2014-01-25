@@ -29,4 +29,9 @@ public class Room : GameBehaviour {
 		}
 		return (top == exitTop) && (right == exitRight) && (bottom == exitDown) && (left == exitLeft);
 	}
+
+	public void SpawnEnemies() {
+		GameObject go = (GameObject)Instantiate (Game.enemies [Mathf.FloorToInt (Random.value * Game.enemies.Length)].gameObject);
+		go.transform.position = transform.position;
+	}
 }
