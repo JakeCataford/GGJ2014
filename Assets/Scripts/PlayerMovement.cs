@@ -30,6 +30,11 @@ public class PlayerMovement : MonoBehaviour {
 	private bool wallHanging = false;
 	private Vector3 wallHangingPosition;
 
+
+	void Start() {
+		rigidbody2D.fixedAngle = true;
+	}
+
 	void Update()
 	{
 		grounded = Physics2D.Raycast(transform.position, -Vector2.up, ((BoxCollider2D)collider2D).size.y / 1.9f, 1 << LayerMask.NameToLayer("World"));
