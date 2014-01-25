@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour {
 		if(Input.GetButtonDown("Jump") && (grounded || wallHanging)) {
 			Debug.Log("Hop.");
 			jump = true;
-		} else if (Input.GetButton("Fire2") && hasPowerBooster && powerBoosterUsed == false) {
+		} else if (Input.GetButton("Fire2") && hasPowerBooster && powerBoosterUsed == false && wallHanging == false) {
 			boost = true;
 		}
 	}
@@ -73,11 +73,9 @@ public class PlayerMovement : MonoBehaviour {
 			grounded = true;
 		}
 
-		if (Vector2.Dot (collisionAverageNormal, - Vector2.right) > 0.9f) {
+		if (Vector2.Dot (collisionAverageNormal, -Vector2.right) > 0.9f) {
 			leftCollision = true;
-		}
-
-		if (Vector2.Dot (collisionAverageNormal, Vector2.right) > 0.9f) {
+		} else if (Vector2.Dot (collisionAverageNormal, Vector2.right) > 0.9f) {
 			rightCollision = true;
 		}
 	}
