@@ -73,9 +73,9 @@ public class PlayerMovement : MonoBehaviour {
 			grounded = true;
 		}
 
-		if (Vector2.Dot (collisionAverageNormal, -Vector2.right) > 0.9f) {
+		if (Vector2.Dot (collisionAverageNormal, Vector2.right) > 0.9f) {
 			leftCollision = true;
-		} else if (Vector2.Dot (collisionAverageNormal, Vector2.right) > 0.9f) {
+		} else if (Vector2.Dot (collisionAverageNormal, -Vector2.right) > 0.9f) {
 			rightCollision = true;
 		}
 	}
