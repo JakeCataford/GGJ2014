@@ -4,7 +4,7 @@ using CollisionExtentions;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
-[RequireComponent(typeof(WeaponController))]
+[RequireComponent(typeof(SecondWeaponController))]
 public class SecondPlayerMovement : GameBehaviour {
 	
 	[HideInInspector]
@@ -18,8 +18,8 @@ public class SecondPlayerMovement : GameBehaviour {
 	
 	public float boostDecelerationLerpTime = 0.02f;
 	public float moveDecelerationLerpTime = 1f;	
-	public float playerSpeed = 2f;
-	public float jumpSpeed = 5f;
+	public float playerSpeed = 8f;
+	public float jumpSpeed = 10f;
 	public float boostSpeed = 10f;
 	
 	public bool hasPowerBooster = false;
