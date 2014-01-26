@@ -31,7 +31,7 @@ public class HopperEnemy : Enemy {
 		if (col.collider.tag == "Player" || col.collider.tag == "Projectile") {
 			rigidbody2D.velocity = new Vector2(Mathf.Sign(transform.position.x - col.transform.position.x), 1).normalized * 5;
 			if (col.collider.tag == "Player") {
-				col.collider.gameObject.GetComponent<Player>().health -= attackDamage;
+				Game.health -= attackDamage;
 			}
 		}
 	}
