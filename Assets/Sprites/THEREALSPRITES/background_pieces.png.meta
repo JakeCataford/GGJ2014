@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: aed4c4c9cd09e4712ae568d813be71a2
+guid: bbd5b8d9652967d4f8f17c5d0fc5819f
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -41,13 +41,22 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: platforms_0
+    - name: background_pieces_0
       rect:
         serializedVersion: 2
-        x: 397
-        y: 208
-        width: 403
-        height: 76
+        x: 0
+        y: 750
+        width: 1655
+        height: 645
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: background_pieces_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 7
+        width: 622
+        height: 731
       alignment: 0
       pivot: {x: .5, y: .5}
   spritePackingTag: 

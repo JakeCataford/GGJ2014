@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6f8fc978078fe4376a5d3b11c5da83f0
+guid: 11ee3d6c4bf64574c93ddc4047203222
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -41,94 +41,67 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Utility_0
+    - name: floorwall_0
       rect:
         serializedVersion: 2
-        x: 496
-        y: 488
-        width: 356
-        height: 347
+        x: 0
+        y: 1282
+        width: 2364
+        height: 1238
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: Utility_1
+    - name: floorwall_1
       rect:
         serializedVersion: 2
-        x: 941
-        y: 923
-        width: 168
-        height: 59
+        x: 2459
+        y: 2034
+        width: 2096
+        height: 486
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: Utility_2
+    - name: floorwall_2
       rect:
         serializedVersion: 2
-        x: 72
-        y: 856
-        width: 273
-        height: 245
+        x: 2459
+        y: 1990
+        width: 2161
+        height: 530
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: Utility_3
+    - name: floorwall_3
       rect:
         serializedVersion: 2
-        x: 588
-        y: 853
-        width: 254
-        height: 249
+        x: 2393
+        y: 1297
+        width: 1329
+        height: 693
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: Utility_4
+    - name: floorwall_4
       rect:
         serializedVersion: 2
-        x: 480
-        y: 1139
-        width: 617
-        height: 232
+        x: 1407
+        y: 544
+        width: 1424
+        height: 643
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: Utility_5
+    - name: floorwall_5
       rect:
         serializedVersion: 2
-        x: 130
-        y: 280
-        width: 72
-        height: 173
+        x: 173
+        y: 566
+        width: 1212
+        height: 636
       alignment: 0
       pivot: {x: .5, y: .5}
-    - name: Utility_6
+    - name: floorwall_6
       rect:
         serializedVersion: 2
-        x: 208
-        y: 279
-        width: 37
-        height: 101
-      alignment: 0
-      pivot: {x: .5, y: .5}
-    - name: Utility_7
-      rect:
-        serializedVersion: 2
-        x: 204
-        y: 282
-        width: 61
-        height: 159
-      alignment: 0
-      pivot: {x: .5, y: .5}
-    - name: Utility_8
-      rect:
-        serializedVersion: 2
-        x: 265
-        y: 265
-        width: 72
-        height: 171
-      alignment: 0
-      pivot: {x: .5, y: .5}
-    - name: Utility_9
-      rect:
-        serializedVersion: 2
-        x: 526
-        y: 362
-        width: 119
-        height: 92
+        x: 2869
+        y: 150
+        width: 1015
+        height: 906
       alignment: 0
       pivot: {x: .5, y: .5}
   spritePackingTag: 
