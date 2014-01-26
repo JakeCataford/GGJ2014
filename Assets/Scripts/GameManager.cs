@@ -16,6 +16,14 @@ public class GameManager : Singleton<GameManager> {
 	private Vector2 p1Pos;
 	private Vector2 p2Pos;
 
+	public void Start() {
+		int playerLayer = LayerMask.NameToLayer("Player");
+		Physics2D.IgnoreLayerCollision(playerLayer, playerLayer);
+
+		int enemyLayer = LayerMask.NameToLayer("Enemy");
+		Physics2D.IgnoreLayerCollision(enemyLayer, enemyLayer);
+	}
+
 	public void Update() {
 		if (playerSeparation > turd) {
 			health -= 1;
@@ -32,9 +40,7 @@ public class GameManager : Singleton<GameManager> {
 	public void SpawnAllEnemies() {
 		foreach (Room[] roomes in rooms) {
 			foreach (Room room in roomes) {
-				if (room && !room.solid) {
-					room.SpawnEnemies ();
-				}
+				//dont....
 			}
 		}
 	}

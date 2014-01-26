@@ -3,7 +3,9 @@ using System.Collections;
 
 public class RotateAtSpeed : MonoBehaviour {
 
-	public float speed = 0.1f;
+	public float x = 0.02f;
+	public float y = 0.023f;
+	public float z = 0.01f;
 	// Use this for initialization
 	void Start () {
 	
@@ -11,6 +13,8 @@ public class RotateAtSpeed : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Rotate (Vector3.forward, speed);
+		transform.Rotate (Vector3.right, x);
+		transform.Rotate (Vector3.up, y);
+		transform.Rotate (Vector3.forward, z);
 	}
 }

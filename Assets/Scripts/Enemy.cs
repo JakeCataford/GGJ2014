@@ -10,6 +10,11 @@ public class Enemy : GameBehaviour {
 
 	protected bool isVisible;
 
+	void Start() {
+		tag = "Enemy";
+		gameObject.layer = LayerMask.NameToLayer("Enemy");
+	}
+
 	void OnBecameVisible() {
 		isVisible = true;
 	}

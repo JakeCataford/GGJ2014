@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class GameCamera : MonoBehaviour {
-
+	public RenderTexture texture;
 	// Assignable Target, Leave null to user player tag...
 	public Transform target;
 

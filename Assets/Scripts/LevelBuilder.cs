@@ -8,17 +8,16 @@ public class LevelBuilder : Singleton<LevelBuilder> {
 	public enum Theme { TEST }
 
 	//Size of area square lol.
-	public static int SPUT_MAGNETTE = 50;
-	public static int SPUT_DISTANCE = 50;
+	public static int NUMBER_OF_ROOMS = 10;
 
 	public Vector2 spawnPoint = new Vector2(0,0);
 
-	List<Room> RoomList;
+	List<Room> RoomList = new List<Room>();
 
-	public List<Room> TestRooms;
+	public Room spawnRoom;
+	public Room endRoom;
 
-	public int[][] roomModel;
-
+	public List<Room> RoomTemplates;
 	protected LevelBuilder() {}
 
 	public void Start() {
@@ -26,104 +25,40 @@ public class LevelBuilder : Singleton<LevelBuilder> {
 	}
 
 	public void BuildLevel(Theme theme) {
-
-		roomModel = new int[SPUT_MAGNETTE][];
-
-		for (int i = 0; i < SPUT_MAGNETTE; i++) {
-			roomModel[i] = new int[SPUT_MAGNETTE];
-		}
-
 		if (theme == Theme.TEST) {
-			RoomList = TestRooms;
+			//RoomList = RoomTemplates;
 		}
 
-		GenerateSolutionPath();
 		GenerateRooms();
-		Game.SpawnAllEnemies ();
+		//Game.SpawnAllEnemies ();
 		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
+
 		foreach (GameObject player in players) {
 			player.transform.position = spawnPoint;
 		}
 	}
 
 	private void GenerateRooms() {
-		Room[][] rooms = new Room[SPUT_MAGNETTE][];
-		for (int i = 0; i < SPUT_MAGNETTE; i++) {
-			rooms[i] = new Room[SPUT_MAGNETTE];
-		}
+		GameObject spawn = (GameObject)Instantiate (spawnRoom.gameObject);
+		spawnRoom = spawnRoom.GetComponent<Room> ();
 
-		for (int i = 0; i < SPUT_MAGNETTE; i ++) {
-			for (int j = 0; j < SPUT_MAGNETTE; j++) {
-				List<Room> ValidRooms;
-				if(roomModel[i][j] == 0) {
-					ValidRooms = TestRooms.Where (x => x.solid).ToList();
-				} else {
-					bool topConfig = (j + 1 < SPUT_MAGNETTE && roomModel[i][j+1] != 0);
-					bool rightConfig = (i + 1 < SPUT_MAGNETTE && roomModel[i + 1][j] != 0); 
-					bool downConfig = (j - 1 >= 0 && roomModel[i][j - 1] != 0); 
-					bool leftConfig = (i - 1 >= 0 && roomModel[i - 1][j] != 0); 
-					ValidRooms = TestRooms.Where (x => x.IsValidForConfig(topConfig,rightConfig,downConfig,leftConfig)).ToList();
-				}
-
-				if(ValidRooms.Count == 0) {
-					//Skip
-				} else {
-					GameObject go = (GameObject) Instantiate(ValidRooms[Mathf.FloorToInt(UnityEngine.Random.value * ValidRooms.Count)].gameObject);
-					go.transform.position = new Vector3(i * Room.ROOM_SIZE.x, j * Room.ROOM_SIZE.y, 0);
-					go.transform.parent = transform;
-					rooms[i][j] = go.GetComponent<Room>();
-				}
-			}
-		}
-
-		Game.rooms = rooms;
-	}
-
-	private void GenerateSolutionPath() {
-		//Start on the far right.
-		int x = 1;
-		//Start at some random whye
-		int y = Mathf.FloorToInt(SPUT_MAGNETTE/2);
-		//2 = entrance goes here....
-		roomModel [x] [y] = 2;
-		spawnPoint = new Vector2 (x * Room.ROOM_SIZE.x, y * Room.ROOM_SIZE.y);
-		int numberOfTriesSoFar = 0;
-		for (int i = 0; i < SPUT_DISTANCE; i++) {
-			int candidateX = x;
-			int candidateY = y;
-
-			switch( Mathf.FloorToInt(UnityEngine.Random.Range(0,3))) {
-				case 0:
-					candidateY++;
-					break;
-				case 1:
-					candidateX++;
-					break;
-				case 2:
-					candidateY--;
-					break;
-
-				default:
-					candidateX = -1;
-					break;
-			}
-
-			if((candidateX > 0 && candidateX < SPUT_MAGNETTE) && (candidateY > 0 && candidateY < SPUT_MAGNETTE) && roomModel[candidateX][candidateY] == 0) {
-				x = candidateX;
-				y = candidateY;
-				roomModel[x][y] = 1;
-				numberOfTriesSoFar = 0;
+		for (int i = 0; i < NUMBER_OF_ROOMS; i++) { 
+			GameObject go = (GameObject) Instantiate(RoomTemplates[Mathf.FloorToInt(UnityEngine.Random.value * RoomTemplates.Count)].gameObject);
+			Room room = go.GetComponent<Room>();
+			RoomList.Add (room);
+			if(i == 0) {
+				room.PositionStartPointAt(spawnRoom.End.position);
 			} else {
-				numberOfTriesSoFar ++;
-				i--;
-				if(numberOfTriesSoFar > 10) {
-					//dug into a corner, bail...
-					throw new StackOverflowException("eh....");
-				}
+				room.PositionStartPointAt(RoomList[i-1].End.position);
 			}
 		}
 
+		GameObject end = (GameObject) Instantiate (endRoom.gameObject);
+		endRoom = end.GetComponent<Room> ();
+		endRoom.GetComponent<Room> ().PositionStartPointAt (RoomList.Last ().End.position);
 	}
+
+
 
 	void OnDrawGizmos() {
 		/*

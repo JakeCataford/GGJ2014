@@ -22,9 +22,11 @@ public class PlayerMovement : GameBehaviour {
 	public float jumpSpeed = 5f;
 	public float boostSpeed = 10f;
 
+	public Color damageColor = Color.white;
+
 	public bool hasPowerBooster = false;
 	public bool hasPowerWallHang = false;
-
+	public GameObject spriteObject;
 	public bool grounded = false;
 	public bool leftCollision = false;
 	private bool rightCollision = false;
@@ -36,6 +38,8 @@ public class PlayerMovement : GameBehaviour {
 	private Vector2 debugLastNormal = new Vector2 (0, 1);
 
 	private Animator animator;
+
+
 
 
 	void Start() {
@@ -64,10 +68,14 @@ public class PlayerMovement : GameBehaviour {
 		} else if (Input.GetButton("Fire2") && hasPowerBooster && powerBoosterUsed == false && wallHanging == false) {
 			boost = true;
 		}
+
+		damageColor = Color.Lerp(damageColor, Color.white, 0.04f);
+		spriteObject.GetComponent<SpriteRenderer> ().color = damageColor;
 	}
 
 	void OnCollisionEnter2D(Collision2D col) {
 		if (col.collider.tag == "Enemy") {
+			damageColor = Color.red;
 			rigidbody2D.velocity = new Vector2(Mathf.Sign(transform.position.x - col.transform.position.x), 1).normalized * boostSpeed;
 			enemyCollision = true;
 		}
