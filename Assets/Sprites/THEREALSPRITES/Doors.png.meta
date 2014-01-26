@@ -40,6 +40,24 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: Doors_0
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 10
+        width: 231
+        height: 354
+      alignment: 0
+      pivot: {x: .5, y: .5}
+    - name: Doors_1
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 15
+        width: 90
+        height: 349
+      alignment: 0
+      pivot: {x: .5, y: .5}
   spritePackingTag: 
   userData: 
