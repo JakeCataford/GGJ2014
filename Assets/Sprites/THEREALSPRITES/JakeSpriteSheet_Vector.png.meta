@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 15bd405190a03413db025eae615ef0ee
+guid: bfcce52ba7a7f4191864558bba08cdf5
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -40,24 +40,6 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites:
-    - name: frenemy_0
-      rect:
-        serializedVersion: 2
-        x: 210
-        y: 203
-        width: 51
-        height: 6
-      alignment: 0
-      pivot: {x: .5, y: .5}
-    - name: frenemy_1
-      rect:
-        serializedVersion: 2
-        x: 50
-        y: 56
-        width: 219
-        height: 188
-      alignment: 0
-      pivot: {x: .5, y: .5}
+    sprites: []
   spritePackingTag: 
   userData: 
