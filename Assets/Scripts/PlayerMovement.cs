@@ -5,7 +5,7 @@ using CollisionExtentions;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(WeaponController))]
-public class PlayerMovement2 : GameBehaviour {
+public class PlayerMovement : GameBehaviour {
 
 	[HideInInspector]
 	public bool facingRight = true;

@@ -5,7 +5,7 @@ using CollisionExtentions;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(WeaponController))]
-public class PlayerMovement : GameBehaviour {
+public class SecondPlayerMovement : GameBehaviour {
 	
 	[HideInInspector]
 	public bool facingRight = true;
@@ -92,8 +92,8 @@ public class PlayerMovement : GameBehaviour {
 	
 	void FixedUpdate ()
 	{
-		float h = Input.GetAxis("Horizontal");
-		float v = Input.GetAxis ("Vertical");
+		float h = Input.GetAxis("Horizontal2");
+		float v = Input.GetAxis ("Vertical2");
 		
 		//		Horizontal movement
 		if (wallHanging) {
@@ -130,7 +130,7 @@ public class PlayerMovement : GameBehaviour {
 		
 		animator.SetFloat("Horizontal Speed", Mathf.Abs(rigidbody2D.velocity.x));
 		animator.SetBool ("Grounded", grounded);
-		
+
 		grounded = false;
 		leftCollision = false;
 		rightCollision = false;

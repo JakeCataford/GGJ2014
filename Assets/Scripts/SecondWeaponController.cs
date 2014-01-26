@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WeaponController2 : GameBehaviour {
+public class SecondWeaponController : GameBehaviour {
 	public Projectile bullet;
 	public Animator animator;
 	private float shootingCountdown = 0.0f;
