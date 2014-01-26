@@ -16,8 +16,10 @@ public class Projectile : GameBehaviour {
 
 	void Start () {
 		if (friendly) {
+			tag = "Player";
 			gameObject.layer = LayerMask.NameToLayer("Player");
 		} else {
+			tag = "Enemy";
 			gameObject.layer = LayerMask.NameToLayer("Enemy");
 		}
 
@@ -37,11 +39,15 @@ public class Projectile : GameBehaviour {
 	}
 	
 	void OnCollisionEnter2D(Collision2D col) {
-		if (col.collider.tag != "Player") {
-			if (col.collider.tag == "Enemy") {
-				col.collider.gameObject.GetComponent<Enemy>().health -= damage;
-			}
-			Destroy (gameObject);
+		if (col.collider.tag == "Enemy" && friendly) {
+			col.collider.GetComponent<Enemy> ().health -= damage;
+		} else if( col.collider.tag == "Player" && !friendly) {
+			Game.health -= damage;
 		}
+
+		GameObject go = (GameObject)Instantiate (Game.particleDeathPs.gameObject);
+		go.transform.position = transform.position;
+		go.particleSystem.Emit(10);
+		Destroy (gameObject);
 	}
 }

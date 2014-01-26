@@ -10,7 +10,10 @@ public class Patroller : Enemy {
 	public float patrolSpeed = 1.0f;
 	public bool collidedWithWall = false;
 
+	public float timeOut = 0;
+
 	void Start() {
+
 		rigidbody2D.fixedAngle = true;
 	}
 
@@ -19,11 +22,13 @@ public class Patroller : Enemy {
 			Vector2 vel = rigidbody2D.velocity;
 			vel.x = transform.localScale.x * patrolSpeed;
 			rigidbody2D.velocity = vel;
-			RaycastHit2D hit = Physics2D.Raycast((Vector2) transform.position + (Vector2.right * 1.2f * transform.localScale.x), Vector2.up, 1.0f);
-			if(collidedWithWall || !hit) {
+			RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right, 2.1f, ~ (1 << LayerMask.NameToLayer("Enemy")));
+			if(collidedWithWall || hit && timeOut < 0) {
 				Flip();
+				timeOut = 1f;
 			}
 			collidedWithWall = false;
+			timeOut -= Time.deltaTime;
 		}
 	}
 
@@ -37,7 +42,7 @@ public class Patroller : Enemy {
 		//Debug.Log (normal);
 		//Debug.Log (Vector2.Dot (normal, Vector2.right));
 
-		if (Vector2.Dot (normal, Vector2.right) > 0.9f) {
+		if (Vector2.Dot (normal, Vector2.right) > 0.5f) {
 			collidedWithWall = true;
 		}
 	}
