@@ -31,7 +31,13 @@ public class HopperEnemy : Enemy {
 		if (col.collider.tag == "Player" || col.collider.tag == "Projectile") {
 			rigidbody2D.velocity = new Vector2(Mathf.Sign(transform.position.x - col.transform.position.x), 1).normalized * 5;
 			if (col.collider.tag == "Player") {
-				Game.health -= attackDamage;
+				int damage = Mathf.FloorToInt(baseAttackDamage * Game.playerSeparation);
+				if (damage > maxAttackDamage) {
+					damage = maxAttackDamage;
+				} else if (damage < minAttackDamage) {
+					damage = minAttackDamage;
+				}
+				Game.health -= damage;
 			}
 		}
 	}

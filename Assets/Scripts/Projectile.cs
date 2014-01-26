@@ -6,9 +6,13 @@ using System.Collections;
 public class Projectile : GameBehaviour {
 
 	public Vector2 direction = Vector2.right;
-	public int damage = 5;
+	public int baseDamage = 20;
+	public int maxDamage = 10;
+	public int minDamage = 4;
 	public bool friendly = true;
 	public float speed = 10f; 
+
+	private int damage;
 
 	void Start () {
 		if (friendly) {
@@ -16,9 +20,16 @@ public class Projectile : GameBehaviour {
 		} else {
 			gameObject.layer = LayerMask.NameToLayer("Enemy");
 		}
+
+		damage = Mathf.FloorToInt(baseDamage / Game.playerSeparation);
+		if (damage < minDamage) {
+			damage = minDamage;
+		} else if (damage > maxDamage) {
+			damage = maxDamage;
+		}
+
 		rigidbody2D.gravityScale = 0.0f;
 		rigidbody2D.drag = 0.0f;
-
 	}
 
 	void FixedUpdate() {

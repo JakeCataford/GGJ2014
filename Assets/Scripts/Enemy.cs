@@ -5,7 +5,9 @@ public class Enemy : GameBehaviour {
 
 	protected BaseAI enemyAI;
 	public int health = 20;
-	public int attackDamage = 5;
+	public float baseAttackDamage = 0.5f;
+	public int maxAttackDamage = 10;
+	public int minAttackDamage = 2;
 	public float movementSpeed = 10f;
 
 	protected bool isVisible;
