@@ -40,15 +40,6 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites:
-    - name: platforms_0
-      rect:
-        serializedVersion: 2
-        x: 397
-        y: 208
-        width: 403
-        height: 76
-      alignment: 0
-      pivot: {x: .5, y: .5}
+    sprites: []
   spritePackingTag: 
   userData: 
