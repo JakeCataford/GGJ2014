@@ -40,6 +40,15 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: Scanner_0
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 93
+        width: 737
+        height: 125
+      alignment: 0
+      pivot: {x: .5, y: .5}
   spritePackingTag: 
   userData: 
